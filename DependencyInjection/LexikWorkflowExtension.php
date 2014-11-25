@@ -56,6 +56,7 @@ class LexikWorkflowExtension extends Extension
                 new Reference(sprintf('lexik_workflow.process.%s', $processName)),
                 new Reference('lexik_workflow.model_storage'),
                 new Reference('event_dispatcher'),
+                new Reference('doctrine.orm.entity_manager'),
             ));
 
             $definition->addMethodCall('setSecurityContext', array(new Reference('security.context')));

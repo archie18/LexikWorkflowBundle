@@ -122,19 +122,18 @@ class Configuration implements ConfigurationInterface
                     ->end()
 
                     ->arrayNode('model_status')
-                        ->validate()
-                            ->ifTrue(function ($value) {
-                                return (is_array($value) && count($value) < 2);
-                            })
-                            ->thenInvalid('You must specify an array with [ method, constant ]')
-                            ->ifTrue(function ($value) {
-                                return ( ! defined($value[1]));
-                            })
-                            ->thenInvalid('You must specify a valid constant name as second parameter')
-                        ->end()
+//                        ->validate()
+//                            ->ifTrue(function ($value) {
+//                                return (is_array($value) && count($value) < 2);
+//                            })
+//                            ->thenInvalid('You must specify an array with [ method, constant ]')
+//                            ->ifTrue(function ($value) {
+//                                return ( ! defined($value[1]));
+//                            })
+//                            ->thenInvalid('You must specify a valid constant name as second parameter')
+//                        ->end()
                         ->prototype('scalar')->end()
                     ->end()
-
                     ->scalarNode('on_invalid')
                         ->defaultNull()
                     ->end()
