@@ -60,6 +60,26 @@ class ModelState
      */
     protected $next;
 
+    //New variables
+    
+    /**
+     *
+     * @var string
+     */
+    protected $entityClass;
+    
+    /**
+     *
+     * @var int
+     */
+    protected $entityId;
+    
+    /**
+     *
+     * @var int
+     */
+    protected $entityIteration;
+    
     /**
      * Construct.
      */
@@ -267,5 +287,65 @@ class ModelState
         $state->setPrevious($this);
 
         $this->next[] = $state;
+    }
+    
+    /**
+     * Get entityClass
+     *
+     * @return string
+     */
+    public function getEntityClass()
+    {
+        return $this->entityClass;
+    }
+
+    /**
+     * Set entityClass
+     *
+     * @param string
+     */
+    public function setEntityClass($entityClass)
+    {
+        $this->entityClass = $entityClass;
+    }
+    
+    /**
+     * Get entityId
+     *
+     * @return int
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * Set entityId
+     *
+     * @param int
+     */
+    public function setEntityId($entityId)
+    {
+        $this->entityId = $entityId;
+    }
+    
+    /**
+     * Get entityIteration
+     *
+     * @return int
+     */
+    public function getEntityIteration()
+    {
+        return $this->entityIteration;
+    }
+
+    /**
+     * Set entityIteration
+     *
+     * @param int
+     */
+    public function setEntityIteration($entityIteration)
+    {
+        $this->entityIteration = $entityIteration;
     }
 }

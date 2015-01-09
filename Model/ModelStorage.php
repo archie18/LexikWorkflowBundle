@@ -2,10 +2,10 @@
 
 namespace Lexik\Bundle\WorkflowBundle\Model;
 
+use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManager;
 use Lexik\Bundle\WorkflowBundle\Entity\ModelState;
 use Lexik\Bundle\WorkflowBundle\Validation\ViolationList;
-
-use Doctrine\ORM\EntityManager;
 
 class ModelStorage
 {
@@ -118,7 +118,10 @@ class ModelStorage
     {
         $modelState = $this->createModelState($model, $processName, $stepName, $previous);
         $modelState->setSuccessful(true);
-
+        $modelState->setEntityClass(ClassUtils::getClass($model->getEntity()));
+        $modelState->setEntityId($model->getEntity()->getId());
+        $modelState->setEntityIteration($model->getEntityIteration());
+        
         $this->om->persist($modelState);
         $this->om->flush($modelState);
 
