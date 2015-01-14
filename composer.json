@@ -6,9 +6,10 @@
     "license": "MIT",
     "homepage": "https://github.com/archie18/LexikWorkflowBundle",
     "authors": [
-        {   "name": "Andreas Schueller",
-            "email:" "apschueller@gmail.com"
-        }
+        {
+            "name": "Andreas Schueller",
+            "email": "apschueller@gmail.com"
+        },
         {
             "name": "Cedric Girard",
             "email": "c.girard@lexik.fr"
