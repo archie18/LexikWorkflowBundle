@@ -1,11 +1,14 @@
 {
-    "name": "lexik/workflow-bundle",
+    "name": "archie18/workflow-bundle",
     "type": "symfony-bundle",
-    "description": "Simple workflow bundle for Symfony2",
+    "description": "Simple workflow bundle for Symfony2. Forked from lexik.",
     "keywords": ["Symfony2", "bundle", "workflow"],
     "license": "MIT",
-    "homepage": "https://github.com/lexik/LexikWorkflowBundle",
+    "homepage": "https://github.com/archie18/LexikWorkflowBundle",
     "authors": [
+        {   "name": "Andreas Schueller",
+            "email:" "apschueller@gmail.com"
+        }
         {
             "name": "Cedric Girard",
             "email": "c.girard@lexik.fr"
