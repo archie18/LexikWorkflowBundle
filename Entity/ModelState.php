@@ -81,6 +81,11 @@ class ModelState
     protected $entityIteration;
     
     /**
+     * @var int
+     */
+    protected $userId;
+    
+    /**
      * Construct.
      */
     public function __construct()
@@ -348,4 +353,24 @@ class ModelState
     {
         $this->entityIteration = $entityIteration;
     }
+    
+    /**
+     * Get user Id
+     * @return int
+     */
+    function getUserId() {
+        return $this->userId;
+    }
+
+    /**
+     * Set userId
+     * @param int $userId
+     * @return \Lexik\Bundle\WorkflowBundle\Entity\ModelState
+     */
+    function setUserId($userId) {
+        $this->userId = $userId;
+        return $this;
+    }
+
+
 }

@@ -20,15 +20,21 @@ class ModelStorage
     protected $repository;
 
     /**
+     * @var ContainerInterface
+     */
+    protected $container;
+    
+    /**
      * Construct.
      *
      * @param EntityManager $om
      * @param string        $entityClass
      */
-    public function __construct(EntityManager $om, $entityClass)
+    public function __construct(EntityManager $om, $entityClass, $container)
     {
         $this->om = $om;
         $this->repository = $this->om->getRepository($entityClass);
+        $this->container = $container;
     }
 
     /**
@@ -121,6 +127,13 @@ class ModelStorage
         $modelState->setEntityClass(ClassUtils::getClass($model->getEntity()));
         $modelState->setEntityId($model->getEntity()->getId());
         $modelState->setEntityIteration($model->getEntityIteration());
+        
+        if($this->container->get('security.context')->getToken()->getUser()){
+            $modelState->setUserId($this->container->get('security.context')->getToken()->getUser()->getId());
+        }
+        else{
+            $modelState->setUserId(null);
+        }
         
         $this->om->persist($modelState);
         $this->om->flush($modelState);

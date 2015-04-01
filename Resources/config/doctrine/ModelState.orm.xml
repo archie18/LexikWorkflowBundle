@@ -35,6 +35,8 @@
         <field name="entityId" column="entityId" type="integer" nullable="true" />
         
         <field name="entityIteration" column="entityIteration" type="integer" nullable="true" />
+        
+        <field name="userId" column="userId" type="integer" nullable="true" />
 
         <one-to-many field="next" target-entity="Lexik\Bundle\WorkflowBundle\Entity\ModelState" mapped-by="previous" />
 

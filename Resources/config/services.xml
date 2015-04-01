@@ -18,6 +18,7 @@
         <service id="lexik_workflow.model_storage" class="%lexik_workflow.model_storage.class%">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument>%lexik_workflow.model_state.class%</argument>
+            <argument type="service" id="service_container" />
         </service>
 
         <!-- Twig extension -->
