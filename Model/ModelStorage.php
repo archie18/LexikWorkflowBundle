@@ -4,6 +4,7 @@ namespace Lexik\Bundle\WorkflowBundle\Model;
 
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
+use MeloLab\Postgrado\UserBundle\Entity\User;
 use Lexik\Bundle\WorkflowBundle\Entity\ModelState;
 use Lexik\Bundle\WorkflowBundle\Validation\ViolationList;
 
@@ -128,7 +129,7 @@ class ModelStorage
         $modelState->setEntityId($model->getEntity()->getId());
         $modelState->setEntityIteration($model->getEntityIteration());
         
-        if($this->container->get('security.context')->getToken()->getUser()){
+        if($this->container->get('security.context')->getToken()->getUser() instanceof User){
             $modelState->setUserId($this->container->get('security.context')->getToken()->getUser()->getId());
         }
         else{
