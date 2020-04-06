@@ -267,7 +267,7 @@ class ModelState
      *
      * @param ModelState $state
      */
-    public function setPrevious(ModelState $state)
+    public function setPrevious($state)
     {
         $this->previous = $state;
     }
