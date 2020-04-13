@@ -90,6 +90,10 @@ class Configuration implements ConfigurationInterface
                         ->defaultValue(array())
                         ->prototype('scalar')->end()
                     ->end()
+
+                    ->scalarNode('parent')
+                        ->defaultNull()
+                    ->end()
                 ->end()
                 ->append($this->createStepsNodeDefinition())
             ->end()
@@ -116,7 +120,9 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('label')
                         ->defaultValue('')
                     ->end()
-
+                    ->scalarNode('stationary')
+                        ->defaultValue(false)
+                    ->end()
                     ->arrayNode('roles')
                         ->prototype('scalar')->end()
                     ->end()

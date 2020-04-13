@@ -15,6 +15,11 @@ class Step extends Node
     protected $label;
 
     /**
+     * @var boolean
+     */
+    protected $stationary;
+
+    /**
      * @var array
      */
     protected $roles;
@@ -34,16 +39,18 @@ class Step extends Node
      *
      * @param string $name
      * @param string $label
+     * @param boolean $stationary
      * @param array  $nextStates
      * @param array  $modelStatus
      * @param array  $roles
      * @param string $onInvalid
      */
-    public function __construct($name, $label, array $nextStates = array(), array $modelStatus = array(), array $roles = array(), $onInvalid = null)
+    public function __construct($name, $stationary, $label, array $nextStates = array(), array $modelStatus = array(), array $roles = array(), $onInvalid = null)
     {
         parent::__construct($name, $nextStates);
 
         $this->label       = $label;
+        $this->stationary  = $stationary;
         $this->modelStatus = $modelStatus;
         $this->roles       = $roles;
         $this->onInvalid   = $onInvalid;
@@ -65,6 +72,16 @@ class Step extends Node
     public function getLabel()
     {
         return $this->label;
+    }
+
+    /**
+     * Get step stationary.
+     *
+     * @return boolean
+     */
+    public function isStationary()
+    {
+        return $this->stationary;
     }
 
     /**
