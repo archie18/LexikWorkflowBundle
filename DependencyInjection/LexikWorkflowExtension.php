@@ -98,6 +98,7 @@ class LexikWorkflowExtension extends Extension
                 $stepReferences,
                 $processConfig['start'],
                 $processConfig['end'],
+                $processConfig['parent'],
             ));
 
             $definition->setPublic(false)
@@ -129,6 +130,7 @@ class LexikWorkflowExtension extends Extension
         foreach ($steps as $stepName => $stepConfig) {
             $definition = new Definition($stepClass, array(
                 $stepName,
+                $stepConfig['stationary'],
                 $stepConfig['label'],
                 array(),
                 $stepConfig['model_status'],

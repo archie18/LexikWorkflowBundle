@@ -67,6 +67,32 @@ class ModelStateRepository extends EntityRepository
     }
 
     /**
+     * Returns all model states for the given workflow identifier.
+     *
+     * @param  string  $workflowIdentifier
+     * @param  int  $prevStateId
+     * @param  boolean $successOnly
+     * @return array
+     */
+    public function findAllStatesFromLastStationary($workflowIdentifier, $prevStateId, $successOnly)
+    {
+        $qb = $this->createQueryBuilder('ms')
+            ->andWhere('ms.workflowIdentifier = :workflow_identifier')
+            ->andWhere('ms.id > :prevId')
+            ->setParameter('workflow_identifier', $workflowIdentifier)
+            ->setParameter('prevId',$prevStateId)
+            ->orderBy('ms.id','DESC')
+        ;
+
+        if ($successOnly) {
+            $qb->andWhere('ms.successful = :success')
+                ->setParameter('success', true);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Delete all model states for the given workflowIndentifier (and process name if given).
      *
      * @param  string $workflowIdentifier

@@ -36,6 +36,11 @@ class ModelState
     protected $successful;
 
     /**
+     * @var boolean
+     */
+    protected $stationary;
+
+    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -54,37 +59,46 @@ class ModelState
      * @var ModelState
      */
     protected $previous;
+    /**
+     * @var ModelState
+     */
+    protected $parent;
 
     /**
      * @var ArrayCollection
      */
     protected $next;
 
+    /**
+     * @var ArrayCollection
+     */
+    protected $children;
+
     //New variables
-    
+
     /**
      *
      * @var string
      */
     protected $entityClass;
-    
+
     /**
      *
      * @var int
      */
     protected $entityId;
-    
+
     /**
      *
      * @var int
      */
     protected $entityIteration;
-    
+
     /**
      * @var int
      */
     protected $userId;
-    
+
     /**
      * Construct.
      */
@@ -228,6 +242,24 @@ class ModelState
         $this->successful = (boolean) $successful;
     }
 
+
+    /**
+     * @return bool
+     */
+    public function isStationary()
+    {
+        return $this->stationary;
+    }
+
+    /**
+     * @param bool $stationary
+     */
+    public function setStationary($stationary)
+    {
+        $this->stationary = (boolean) $stationary;
+    }
+
+
     /**
      * Get errors
      *
@@ -271,6 +303,26 @@ class ModelState
     {
         $this->previous = $state;
     }
+    
+    /**
+     * Get parent
+     *
+     * @return \Lexik\Bundle\WorkflowBundle\Entity\ModelState
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param ModelState $state
+     */
+    public function setParent(ModelState $state = null)
+    {
+        $this->parent = $state;
+    }
 
     /**
     * Get next
@@ -292,6 +344,28 @@ class ModelState
         $state->setPrevious($this);
 
         $this->next[] = $state;
+    }
+
+    /**
+    * Get children
+    *
+    * @return ArrayCollection
+    */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Add children
+     *
+     * @param ModelState $state
+     */
+    public function addChildren(ModelState $state)
+    {
+        $state->setPrevious($this);
+
+        $this->children[] = $state;
     }
     
     /**

@@ -57,6 +57,41 @@ class ModelStorage
     }
 
     /**
+     * Returns all model states from the last stationary state
+     *
+     * @param  string  $workflowIdentifier
+     * @param  int  $prevStateId
+     * @param  boolean $successOnly
+     * @return array
+     */
+    public function findAllStatesFromLastStationary($workflowIdentifier, $prevStateId, $successOnly)
+    {
+        return $this->repository->findAllStatesFromLastStationary(
+            $workflowIdentifier,
+            $prevStateId,
+            $successOnly
+        );
+    }
+
+    /**
+     * Returns the current model state.
+     *
+     * @param ModelInterface $model
+     * @param string         $processName
+     * @param string         $stepName
+     *
+     * @return ModelState
+     */
+    public function findCurrentModelStateByWorkflowIdentifier($identifier, $processName, $stepName = null)
+    {
+        return $this->repository->findLatestModelState(
+            $identifier,
+            $processName,
+            $stepName
+        );
+    }
+
+    /**
      * Returns all model states.
      *
      * @param ModelInterface $model
@@ -85,11 +120,16 @@ class ModelStorage
      *
      * @return ModelState
      */
-    public function newModelStateError(ModelInterface $model, $processName, $stepName, ViolationList $violationList, $previous = null)
+    public function newModelStateError(ModelInterface $model, $processName, $stepName, ViolationList $violationList, $stationary, $previous = null, $parent = null)
     {
         $modelState = $this->createModelState($model, $processName, $stepName, $previous);
+        $modelState->setParent($parent);
         $modelState->setSuccessful(false);
+        $modelState->setStationary($stationary);
         $modelState->setErrors($violationList->toArray());
+        $modelState->setEntityClass(ClassUtils::getClass($model->getEntity()));
+        $modelState->setEntityId($model->getEntity()->getId());
+        $modelState->setEntityIteration($model->getEntityIteration());
 
         $this->om->persist($modelState);
         $this->om->flush($modelState);
@@ -121,10 +161,12 @@ class ModelStorage
      *
      * @return \Lexik\Bundle\WorkflowBundle\Entity\ModelState
      */
-    public function newModelStateSuccess(ModelInterface $model, $processName, $stepName, $previous = null)
+    public function newModelStateSuccess(ModelInterface $model, $processName, $stepName, $stationary, $previous = null, $parent = null)
     {
         $modelState = $this->createModelState($model, $processName, $stepName, $previous);
         $modelState->setSuccessful(true);
+        $modelState->setParent($parent);
+        $modelState->setStationary($stationary);
         $modelState->setEntityClass(ClassUtils::getClass($model->getEntity()));
         $modelState->setEntityId($model->getEntity()->getId());
         $modelState->setEntityIteration($model->getEntityIteration());
@@ -137,9 +179,48 @@ class ModelStorage
         }
         
         $this->om->persist($modelState);
-        $this->om->flush($modelState);
+        $this->om->flush();
 
         return $modelState;
+    }
+
+    /**
+     * Persist workflow object
+     *
+     * @param mixed $object
+     */
+    public function persistWorkflowObject($object)
+    {
+        $this->om->persist($object);
+    }
+
+    /**
+     * Remove state
+     *
+     * @param mixed $state
+     */
+    public function removeState($state)
+    {
+        $this->om->persist($state);
+
+    }
+
+    /**
+     * Persist workflow object*
+     */
+    public function flushData()
+    {
+        $this->om->flush();
+
+    }
+
+    /**
+     * Return manager
+     */
+    public function getEntityManager()
+    {
+        return $this->om;
+
     }
 
     /**
