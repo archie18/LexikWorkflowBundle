@@ -351,6 +351,12 @@ class ProcessHandler implements ProcessHandlerInterface
         return $statuses;
     }
 
+
+    public function getStepModelStatus($state){
+        $step = $this->process->getStep($state->getStepName());
+        return $step->getModelStatus()[1];
+    }
+
     /**
      * Returns a step by its name.
      *
