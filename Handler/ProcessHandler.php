@@ -399,6 +399,7 @@ class ProcessHandler implements ProcessHandlerInterface
      */
     public function undoStationaryStep(ModelInterface $model, $entityIdentifier, $container, $em){
 
+        $currState = $this->getCurrentState($model);
         $prevState = $this->getPreviousStationaryState($model);
         $states =$this->storage->findAllStatesFromLastStationary($model->getWorkflowIdentifier(),$prevState->getId(),false);
 
@@ -453,6 +454,8 @@ class ProcessHandler implements ProcessHandlerInterface
         }
 
         $em->flush();
+
+        return $currState;
 
     }
 
