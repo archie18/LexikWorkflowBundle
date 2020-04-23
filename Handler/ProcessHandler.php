@@ -414,6 +414,12 @@ class ProcessHandler implements ProcessHandlerInterface
             $subModelName = $container->getParameter('course_config')[$entityIdentifier][$state->getProcessName()]["model"];
             $subProcessModel = new $subModelName($model->getWorkflowObject(), $container, $em);
 
+            //Fire event on every deleted step
+            $step = $subProcessHandler->getProcessStep($state->getStepName());
+            $event = new StepEvent($step, $subProcessModel, $state);
+            $eventName = sprintf('%s.%s.reset', $state->getProcessName(), $state->getStepName());
+            $this->dispatcher->dispatch($eventName, $event);
+
             $subPrevState = $state->getPrevious();
             if($subPrevState){
                 $step = $subProcessHandler->getProcessStep($subPrevState->getStepName());
@@ -424,10 +430,6 @@ class ProcessHandler implements ProcessHandlerInterface
 
             }
             else{
-                $step = $subProcessHandler->getProcessStep($state->getStepName());
-                $event = new StepEvent($step, $subProcessModel, $state);
-                $eventName = sprintf('%s.%s.reset', $state->getProcessName(), $state->getStepName());
-                $this->dispatcher->dispatch($eventName, $event);
 //
 //                //Reset subprocess data
 //                $subPData = $container->getParameter('course_config')[$entityIdentifier][$state->getProcessName()]["subp_data"];
