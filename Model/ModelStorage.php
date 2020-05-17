@@ -92,6 +92,23 @@ class ModelStorage
     }
 
     /**
+     * Returns the current model state.
+     *
+     * @param ModelInterface $model
+     * @param string         $processName
+     * @param string         $stepName
+     *
+     * @return ModelState
+     */
+    public function findCurrentModelStateByWorkflowIdentifierWithoutProcess($identifier, $stepName = null)
+    {
+        return $this->repository->findLatestModelStateWithoutProcess(
+            $identifier,
+            $stepName
+        );
+    }
+
+    /**
      * Returns all model states.
      *
      * @param ModelInterface $model

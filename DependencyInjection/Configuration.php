@@ -90,9 +90,9 @@ class Configuration implements ConfigurationInterface
                         ->defaultValue(array())
                         ->prototype('scalar')->end()
                     ->end()
-
-                    ->scalarNode('parent')
-                        ->defaultNull()
+                    ->arrayNode('parent')
+                        ->defaultValue(array())
+                        ->prototype('scalar')->end()
                     ->end()
                 ->end()
                 ->append($this->createStepsNodeDefinition())

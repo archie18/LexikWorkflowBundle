@@ -77,10 +77,9 @@ class ProcessHandler implements ProcessHandlerInterface
             throw new WorkflowException(sprintf('The given model has already started the "%s" process.', $this->process->getName()));
         }
 
-        $parentStep = $this->process->getParent();
-        if($parentStep){
-            $parentStepName = explode(".",$parentStep);
-            $parentModelState = $this->storage->findCurrentModelStateByWorkflowIdentifier($model->getWorkflowIdentifier(),$parentStepName[0],$parentStepName[1]);
+        $parentSteps = $this->process->getParent();
+        if($parentStep and count($parentSteps)>0){
+            $parentModelState = $this->storage->findCurrentModelStateByWorkflowIdentifierWithoutProcess($model->getWorkflowIdentifier(),$parentSteps);
             $pid = $parentModelState;
         }else{
             $pid = null;
@@ -401,6 +400,7 @@ class ProcessHandler implements ProcessHandlerInterface
 
         $currState = $this->getCurrentState($model);
         $prevState = $this->getPreviousStationaryState($model);
+
         $states =$this->storage->findAllStatesFromLastStationary($model->getWorkflowIdentifier(),$prevState->getId(),false);
 
         $ids = array();
