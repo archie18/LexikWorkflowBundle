@@ -5,7 +5,7 @@
                                       http://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity name="Lexik\Bundle\WorkflowBundle\Entity\ModelState"
-            table="pg_lexik_workflow_model_state"
+            table="pre_lexik_workflow_model_state"
             repository-class="Lexik\Bundle\WorkflowBundle\Model\ModelStateRepository">
 
         <indexes>
