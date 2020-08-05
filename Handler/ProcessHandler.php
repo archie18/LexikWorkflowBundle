@@ -78,7 +78,7 @@ class ProcessHandler implements ProcessHandlerInterface
         }
 
         $parentSteps = $this->process->getParent();
-        if($parentStep and count($parentSteps)>0){
+        if($parentSteps and count($parentSteps)>0){
             $parentModelState = $this->storage->findCurrentModelStateByWorkflowIdentifierWithoutProcess($model->getWorkflowIdentifier(),$parentSteps);
             $pid = $parentModelState;
         }else{
