@@ -32,7 +32,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=7.1",
         "symfony/symfony": "^5.1",
         "doctrine/orm": "^2.7"
     },
@@ -42,7 +42,7 @@
     "target-dir": "Lexik/Bundle/WorkflowBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "0.3.x-dev"
+            "master-symfony5": "0.4-master_symfony5"
         }
     }
 }
