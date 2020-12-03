@@ -2,7 +2,8 @@
 
 namespace Lexik\Bundle\WorkflowBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Lexik\Bundle\WorkflowBundle\Handler\ProcessHandler;
+use Symfony\Contracts\EventDispatcher\Event;
 
 use Lexik\Bundle\WorkflowBundle\Model\ModelInterface;
 use Lexik\Bundle\WorkflowBundle\Flow\Step;
@@ -33,18 +34,33 @@ class ValidateStepEvent extends Event
     private $violationList;
 
     /**
+     * @var ProcessHandler
+     */
+    private $pHandler;
+
+    /**
      * Constructor.
      *
      * @param Step           $step
      * @param ModelInterface $model
      * @param ViolationList  $violationList
      */
-    public function __construct(Step $step, ModelInterface $model, ViolationList $violationList)
+    public function __construct(Step $step, ModelInterface $model, ViolationList $violationList, ProcessHandler $handler)
     {
         $this->step          = $step;
         $this->model         = $model;
         $this->violationList = $violationList;
+        $this->pHandler = $handler;
     }
+
+    /**
+     * Returns the process handler
+     * @return ProcessHandler $handler
+     */
+    public function getProcessHandler(){
+        return $this->pHandler;
+    }
+
 
     /**
      * Returns the reached step.

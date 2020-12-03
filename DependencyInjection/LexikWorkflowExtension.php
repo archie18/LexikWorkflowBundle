@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Yaml\Parser;
 
 /**
@@ -56,10 +57,10 @@ class LexikWorkflowExtension extends Extension
                 new Reference(sprintf('lexik_workflow.process.%s', $processName)),
                 new Reference('lexik_workflow.model_storage'),
                 new Reference('event_dispatcher'),
-                
+                new Reference('security.authorization_checker')
             ));
 
-            $definition->addMethodCall('setSecurityContext', array(new Reference('security.context')));
+//            $definition->addMethodCall('setSecurityContext', array(new Reference('security.context_listener')));
 
             $container->setDefinition(sprintf('lexik_workflow.handler.%s', $processName), $definition);
         }

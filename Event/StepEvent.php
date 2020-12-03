@@ -2,7 +2,8 @@
 
 namespace Lexik\Bundle\WorkflowBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Lexik\Bundle\WorkflowBundle\Handler\ProcessHandler;
+use Symfony\Contracts\EventDispatcher\Event;
 
 use Lexik\Bundle\WorkflowBundle\Entity\ModelState;
 use Lexik\Bundle\WorkflowBundle\Model\ModelInterface;
@@ -31,17 +32,31 @@ class StepEvent extends Event
     private $modelState;
 
     /**
+     * @var ProcessHandler
+     */
+    private $pHandler;
+
+    /**
      * Construct.
      *
      * @param Step           $step
      * @param ModelInterface $model
      * @param ModelState     $modelState
      */
-    public function __construct(Step $step, ModelInterface $model, ModelState $modelState)
+    public function __construct(Step $step, ModelInterface $model, ModelState $modelState, ProcessHandler $handler)
     {
         $this->step = $step;
         $this->model = $model;
         $this->modelState = $modelState;
+        $this->pHandler = $handler;
+    }
+
+    /**
+     * Returns the process handler
+     * @return ProcessHandler $handler
+     */
+    public function getProcessHandler(){
+        return $this->pHandler;
     }
 
     /**

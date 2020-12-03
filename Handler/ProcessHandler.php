@@ -15,6 +15,8 @@ use Lexik\Bundle\WorkflowBundle\Model\ModelStorage;
 use Lexik\Bundle\WorkflowBundle\Validation\Violation;
 use Lexik\Bundle\WorkflowBundle\Validation\ViolationList;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -49,22 +51,22 @@ class ProcessHandler implements ProcessHandlerInterface
      * @param ModelStorage             $storage
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(Process $process, ModelStorage $storage, EventDispatcherInterface $dispatcher)
+    public function __construct(Process $process, ModelStorage $storage, EventDispatcherInterface $dispatcher,AuthorizationChecker $security)
     {
         $this->process = $process;
         $this->storage = $storage;
         $this->dispatcher = $dispatcher;
-    }
-
-    /**
-     * Set security context.
-     *
-     * @param SecurityContextInterface $security
-     */
-    public function setSecurityContext(SecurityContextInterface $security)
-    {
         $this->security = $security;
     }
+//
+//    /**
+//     * Set security context.
+//     *
+//     * @param SecurityContextInterface $security
+//     */
+//    public function setSecurityContext(SecurityContextInterface $security)
+//    {
+//    }
 
     /**
      * {@inheritdoc}
@@ -127,10 +129,10 @@ class ProcessHandler implements ProcessHandlerInterface
         $step = $state->getTarget($model);
 
         // pre validations
-        $event = new ValidateStepEvent($step, $model, new ViolationList());
+        $event = new ValidateStepEvent($step, $model, new ViolationList(), $this);
         $eventName = sprintf('%s.%s.%s.pre_validation', $this->process->getName(), $currentStep->getName(), $stateName);
 //        var_dump(get_class($event));
-        $this->dispatcher->dispatch($eventName, $event);
+        $this->dispatcher->dispatch($event, $eventName);
 
         $modelState = null;
 
@@ -145,7 +147,7 @@ class ProcessHandler implements ProcessHandlerInterface
             }
 
             $eventName = sprintf('%s.%s.%s.pre_validation_fail', $this->process->getName(), $currentStep->getName(), $stateName);
-            $this->dispatcher->dispatch($eventName, new StepEvent($step, $model, $modelState));
+            $this->dispatcher->dispatch(new StepEvent($step, $model, $modelState, $this), $eventName);
         } else {
             $modelState = $this->reachStep($model, $step, $currentModelState);
         }
@@ -180,9 +182,9 @@ class ProcessHandler implements ProcessHandlerInterface
         $step = $state->getTarget($model);
 
         // pre validations
-        $event = new ValidateStepEvent($step, $model, new ViolationList());
+        $event = new ValidateStepEvent($step, $model, new ViolationList(), $this);
         $eventName = sprintf('%s.%s.%s.pre_validation', $this->process->getName(), $currentStep->getName(), $stateName);
-        $this->dispatcher->dispatch($eventName, $event);
+        $this->dispatcher->dispatch($event, $eventName);
 
         $modelState = null;
 
@@ -217,7 +219,7 @@ class ProcessHandler implements ProcessHandlerInterface
             }
 
             $eventName = sprintf('%s.%s.bad_credentials', $this->process->getName(), $step->getName());
-            $this->dispatcher->dispatch($eventName, new StepEvent($step, $model, $modelState));
+            $this->dispatcher->dispatch(new StepEvent($step, $model, $modelState, $this), $eventName );
 
             if ($step->getOnInvalid()) {
                 $step = $this->getProcessStep($step->getOnInvalid());
@@ -227,9 +229,9 @@ class ProcessHandler implements ProcessHandlerInterface
             return $modelState;
         }
 
-        $event = new ValidateStepEvent($step, $model, new ViolationList());
+        $event = new ValidateStepEvent($step, $model, new ViolationList(), $this);
         $eventName = sprintf('%s.%s.validate', $this->process->getName(), $step->getName());
-        $this->dispatcher->dispatch($eventName, $event);
+        $this->dispatcher->dispatch($event, $eventName);
 
         if (0 === count($event->getViolationList())) {
             $modelState = $this->storage->newModelStateSuccess($model, $this->process->getName(), $step->getName(), $step->isStationary(), $currentModelState, $parentId);
@@ -243,7 +245,7 @@ class ProcessHandler implements ProcessHandlerInterface
 //            }
 
             $eventName = sprintf('%s.%s.reached', $this->process->getName(), $step->getName());
-            $this->dispatcher->dispatch($eventName, new StepEvent($step, $model, $modelState));
+            $this->dispatcher->dispatch(new StepEvent($step, $model, $modelState, $this), $eventName );
         } else {
             //Deactivate error writing
             if($silentError == true){
@@ -256,7 +258,7 @@ class ProcessHandler implements ProcessHandlerInterface
             }
 
             $eventName = sprintf('%s.%s.validation_fail', $this->process->getName(), $step->getName());
-            $this->dispatcher->dispatch($eventName, new StepEvent($step, $model, $modelState));
+            $this->dispatcher->dispatch(new StepEvent($step, $model, $modelState, $this), $eventName );
 
             if ($step->getOnInvalid()) {
                 $step = $this->getProcessStep($step->getOnInvalid());
@@ -416,9 +418,9 @@ class ProcessHandler implements ProcessHandlerInterface
 
             //Fire event on every deleted step
             $step = $subProcessHandler->getProcessStep($state->getStepName());
-            $event = new StepEvent($step, $subProcessModel, $state);
+            $event = new StepEvent($step, $subProcessModel, $state, $this);
             $eventName = sprintf('%s.%s.reset', $state->getProcessName(), $state->getStepName());
-            $this->dispatcher->dispatch($eventName, $event);
+            $this->dispatcher->dispatch($event, $eventName);
 
             $subPrevState = $state->getPrevious();
             if($subPrevState){

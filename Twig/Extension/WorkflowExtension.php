@@ -5,8 +5,10 @@ namespace Lexik\Bundle\WorkflowBundle\Twig\Extension;
 use Lexik\Bundle\WorkflowBundle\Entity\ModelState;
 use Lexik\Bundle\WorkflowBundle\Handler\ProcessAggregator;
 use Lexik\Bundle\WorkflowBundle\Flow\Step;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class WorkflowExtension extends \Twig_Extension
+class WorkflowExtension extends AbstractExtension
 {
     /**
      * @var ProcessAggregator
@@ -29,8 +31,8 @@ class WorkflowExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'get_step_label'     => new \Twig_Function_Method($this, 'getStepLabel'),
-            'get_state_messsage' => new \Twig_Function_Method($this, 'getStateMessage'),
+            'get_step_label'     => new TwigFunction($this, 'getStepLabel'),
+            'get_state_messsage' => new TwigFunction($this, 'getStateMessage'),
         );
     }
 

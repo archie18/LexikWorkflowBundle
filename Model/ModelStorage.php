@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use MeloLab\Postgrado\UserBundle\Entity\User;
 use Lexik\Bundle\WorkflowBundle\Entity\ModelState;
 use Lexik\Bundle\WorkflowBundle\Validation\ViolationList;
+use Symfony\Component\Security\Core\Security;
 
 class ModelStorage
 {
@@ -24,18 +25,24 @@ class ModelStorage
      * @var ContainerInterface
      */
     protected $container;
-    
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $security;
+
     /**
      * Construct.
      *
      * @param EntityManager $om
      * @param string        $entityClass
      */
-    public function __construct(EntityManager $om, $entityClass, $container)
+    public function __construct(EntityManager $om, $entityClass, $container, $security)
     {
         $this->om = $om;
         $this->repository = $this->om->getRepository($entityClass);
         $this->container = $container;
+        $this->security = $security;
     }
 
     /**
@@ -188,8 +195,8 @@ class ModelStorage
         $modelState->setEntityId($model->getEntity()->getId());
         $modelState->setEntityIteration($model->getEntityIteration());
         
-        if($this->container->get('security.context')->getToken()->getUser() instanceof User){
-            $modelState->setUserId($this->container->get('security.context')->getToken()->getUser()->getId());
+        if($this->security->getUser() instanceof User){
+            $modelState->setUserId($this->security->getUser()->getId());
         }
         else{
             $modelState->setUserId(null);
