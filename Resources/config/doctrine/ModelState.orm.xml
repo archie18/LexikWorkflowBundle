@@ -24,7 +24,7 @@
 
         <field name="successful" column="successful" type="boolean" />
 
-        <field name="stationary" column="stationary" type="boolean" />
+        <field name="stationary" column="stationary" type="boolean" nullable="true" />
 
         <field name="createdAt" column="created_at" type="datetime" />
 
